@@ -37,3 +37,15 @@ jobs:
 
       - name: Display directory tree  # 显示目录树
         run: tree  # 执行tree命令，以树状结构显示工作目录的内容
+
+
+      - name: Release JAR  # 发布JAR文件
+        id: upload_jar
+        uses: actions/upload-release-asset@v1  # 使用GitHub官方的upload-release-asset action，用于上传Release的附件
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # 设置GitHub令牌作为环境变量
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}  # 设置上传URL
+          asset_path: ./target/github-ation-spring-demo-0.0.1-SNAPSHOT.jar  # 设置要上传的JAR文件路径
+          asset_name: github-action-spring-demo-jar  # 设置JAR文件的名称
+          asset_content_type: application/java-archive  # 设置JAR文件的内容类型
