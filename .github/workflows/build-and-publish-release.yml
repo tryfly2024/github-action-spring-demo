@@ -3,7 +3,7 @@ name: Build and Publish Release  # 工作流名称
 on:
   push:
     branches:
-      - master  # 当代码推送到master分支时触发工作流程
+      - main  # 当代码推送到master分支时触发工作流程
 
 jobs:
   build-and-publish:
