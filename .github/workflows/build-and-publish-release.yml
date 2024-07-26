@@ -1,0 +1,39 @@
+name: Build and Publish Release  # 工作流名称
+
+on:
+  push:
+    branches:
+      - master  # 当代码推送到master分支时触发工作流程
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest  # 在最新的Ubuntu操作系统上运行任务
+    steps:
+      - uses: actions/checkout@v3  # 使用GitHub官方的checkout action，用于检出代码库
+
+      - name: Set up JDK  # 设置JDK
+        uses: actions/setup-java@master  # 使用GitHub官方的setup-java action，用于安装和配置Java环境
+        with:
+          java-version: 17
+          distribution: "adopt"
+          cache: maven
+
+      - name: Build with Maven  # 使用Maven构建项目
+        run: mvn package --batch-mode  # 执行mvn package命令进行项目构建
+
+      - name: Create Release  # 创建GitHub Release
+        id: create_release
+        uses: actions/create-release@v1  # 使用GitHub官方的create-release action，用于创建GitHub Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}  # 设置GitHub令牌作为环境变量
+        with:
+          tag_name: Release-${{ github.run_number }}  # 设置Release的标签名称
+          release_name: Release ${{ github.run_number }}  # 设置Release的名称
+          draft: false  # 是否是草稿状态
+          prerelease: false  # 是否是预发布状态
+
+      - name: List files  # 列出文件
+        run: ls -R  # 执行ls -R命令，列出工作目录下的文件和子目录
+
+      - name: Display directory tree  # 显示目录树
+        run: tree  # 执行tree命令，以树状结构显示工作目录的内容
